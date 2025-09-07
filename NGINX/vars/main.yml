@@ -1,0 +1,6 @@
+---
+# Example: tweak per OS family (could also be vars/{{ ansible_os_family }}.yml)
+nginx_user_map:
+  Debian: www-data
+  RedHat: nginx
+nginx_user: "{{ nginx_user_map.get(ansible_os_family, 'nginx') }}"

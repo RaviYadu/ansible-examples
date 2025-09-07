@@ -1,0 +1,12 @@
+---
+NGINX:
+  package_name: nginx
+  package_state: present
+  service_state: started
+  service_enabled: true
+  config_path: /etc/nginx/nginx.conf
+  server_name: localhost
+  listen_port: 80
+  root_path: /usr/share/nginx/html
+  index_file: index.html  
+# defaults file for NGINX

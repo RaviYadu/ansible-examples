@@ -1,0 +1,48 @@
+---
+- name: Ensure package cache is update ( for dnf based systems )
+  ansible.builtin.dnf:
+    update_cache: yes
+  when: ansible_facts['os_family'] == "RedHat"
+
+- name: Install NGINX package
+  ansible.builtin.package:
+    name: "{{ NGINX.package_name | default('nginx') }}"
+    state: "{{ NGINX.package_state }}"
+  become: yes
+
+- name: Create root_path directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ NGINX.root_path }}"
+    state: directory
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_user }}"
+    mode: '0755'
+  become: yes
+
+- name: Deploy default index.html
+  ansible.builtin.copy:
+    dest: "{{ NGINX.root_path }}/{{ NGINX.index_file }}"
+    content: "<html><head><title>Welcome to NGINX!</title></head><body><h1>Success! The NGINX server is working!</h1></body></html>"
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_user }}"
+    mode: '0644'
+  become: yes
+
+- name: Deploy NGINX configuration file from template
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: "{{ NGINX.config_path }}"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart NGINX
+  become: yes
+
+- name: Ensure NGINX service is enabled and started
+  ansible.builtin.service:
+    name: "{{ NGINX.package_name | default('nginx') }}"
+    state: started
+    enabled: true
+  become: yes
+
+  

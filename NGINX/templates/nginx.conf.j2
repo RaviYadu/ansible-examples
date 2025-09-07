@@ -1,0 +1,24 @@
+user {{ nginx_user }};
+worker_processes auto;
+
+events {
+  worker_connections 1024;
+}
+
+http {
+  sendfile on;
+  include       mime.types;
+  default_type  application/octet-stream;
+
+  server {
+    listen {{ nginx_port }};
+    server_name {{ nginx_server_name }};
+
+    root {{ nginx_root }};
+    index {{ nginx_index }};
+
+    location / {
+      try_files $uri $uri/ =404;
+    }
+  }
+}

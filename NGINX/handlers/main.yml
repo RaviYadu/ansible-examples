@@ -1,0 +1,7 @@
+---
+- name: Restart NGINX
+  ansible.builtin.service:
+    name: "{{ NGINX.package_name | default('nginx') }}"
+    state: restarted
+  become: yes
+# handlers file for NGINX
