@@ -1,0 +1,15 @@
+---
+name: Create an NGINX Instance
+hosts: all
+become: yes
+tasks:
+  - name: Install NGINX
+    apt:
+      name: nginx
+      state: present
+      update_cache: yes
+  - name: Start NGINX service
+    service:
+      name: nginx
+      state: started
+      enabled: yes
